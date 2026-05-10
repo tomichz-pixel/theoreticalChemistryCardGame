@@ -321,13 +321,13 @@ window.MathJax = {
 (function(){
 
 // 分野(field)によるダイレクト抽出に対応させたマスターデータ
-const masterData = [
+const const masterData  = [
   // =====================================================================
   // 1. 物質の構成と結合・結晶格子（15問）
   // =====================================================================
   {
     id: "CHEM_T_01",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "配位数と充填率",
     latexQ: "\\[ \\text{体心立方格子 (BCC)} \\]",
     latexA: "\\[ \\text{配位数 } 8 \\text{ / 充填率 } 68\\% \\]",
@@ -337,7 +337,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_02",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "配位数と充填率",
     latexQ: "\\[ \\text{面心立方格子 (FCC)} \\]",
     latexA: "\\[ \\text{配位数 } 12 \\text{ / 充填率 } 74\\% \\]",
@@ -347,7 +347,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_03",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "配位数と充填率",
     latexQ: "\\[ \\text{六方最密構造 (HCP)} \\]",
     latexA: "\\[ \\text{配位数 } 12 \\text{ / 充填率 } 74\\% \\]",
@@ -357,7 +357,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_04",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "原子半径 r と格子定数 a の関係",
     latexQ: "\\[ \\text{体心立方格子 (BCC)} \\quad \\text{単位格子の一辺 } a \\]",
     latexA: "\\[ r = \\frac{\\sqrt{3}}{4}a \\]",
@@ -367,7 +367,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_05",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "原子半径 r と格子定数 a の関係",
     latexQ: "\\[ \\text{面心立方格子 (FCC)} \\quad \\text{単位格子の一辺 } a \\]",
     latexA: "\\[ r = \\frac{\\sqrt{2}}{4}a \\]",
@@ -377,7 +377,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_06",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "陽イオンと陰イオンの配位数",
     latexQ: "\\[ \\mathrm{NaCl} \\text{ 型構造} \\quad \\text{代表的なイオン結晶} \\]",
     latexA: "\\[ \\mathrm{Na^+} : 6 \\quad \\mathrm{Cl^-} : 6 \\]",
@@ -387,7 +387,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_07",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "陽イオンと陰イオンの配位数",
     latexQ: "\\[ \\mathrm{CsCl} \\text{ 型構造} \\quad \\text{代表的なイオン結晶} \\]",
     latexA: "\\[ \\mathrm{Cs^+} : 8 \\quad \\mathrm{Cl^-} : 8 \\]",
@@ -397,7 +397,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_08",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "陽イオンと陰イオンの配位数",
     latexQ: "\\[ \\mathrm{ZnS} \\text{ 型構造 (閃亜鉛鉱型)} \\quad \\text{イオン結晶} \\]",
     latexA: "\\[ \\mathrm{Zn^{2+}} : 4 \\quad \\mathrm{S^{2-}} : 4 \\]",
@@ -407,7 +407,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_09",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "イオンが同時接触する幾何学的下限",
     latexQ: "\\[ \\text{限界半径比 } \\frac{r^+}{r^-} \\quad \\text{配位数 } 8 \\text{ (} \\mathrm{CsCl} \\text{ 型)} \\]",
     latexA: "\\[ \\frac{r^+}{r^-} \\ge \\sqrt{3}-1 \\approx 0.732 \\]",
@@ -417,7 +417,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_10",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "イオンが同時接触する幾何学的下限",
     latexQ: "\\[ \\text{限界半径比 } \\frac{r^+}{r^-} \\quad \\text{配位数 } 6 \\text{ (} \\mathrm{NaCl} \\text{ 型)} \\]",
     latexA: "\\[ \\frac{r^+}{r^-} \\ge \\sqrt{2}-1 \\approx 0.414 \\]",
@@ -428,7 +428,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_11",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "クーロン力による結合の強さ比較",
     latexQ: "\\[ \\text{イオン結晶の融点} \\quad \\mathrm{NaCl} \\text{ と } \\mathrm{MgO} \\]",
     latexA: "\\[ \\mathrm{MgO > NaCl} \\quad \\text{(2価同士の結合)} \\]",
@@ -438,7 +438,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_12",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "結合の特徴と物性",
     latexQ: "\\[ \\text{共有結合結晶} \\quad \\text{ダイヤモンド } \\mathrm{C} \\text{ や } \\mathrm{SiO_2} \\]",
     latexA: "\\[ \\text{極めて硬く、高融点、電気の不導体} \\]",
@@ -448,7 +448,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_13",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "結合を維持する力と昇華性",
     latexQ: "\\[ \\text{分子結晶} \\quad \\text{ドライアイス } \\mathrm{CO_2} \\text{ や ヨウ素 } \\mathrm{I_2} \\]",
     latexA: "\\[ \\text{分子間力による結合 / 昇華しやすい} \\]",
@@ -458,7 +458,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_14",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "分子間に働く特異的に強い結合",
     latexQ: "\\[ \\text{同族内で異常な高沸点} \\quad \\mathrm{H_2O, HF, NH_3} \\]",
     latexA: "\\[ \\text{水素結合} \\quad \\text{(} \\mathrm{F, O, N} \\text{ と } \\mathrm{H} \\text{ の結合)} \\]",
@@ -468,7 +468,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_15",
-    level: "理論化学_構成と結合",
+    field: "理論化学_構成と結合",
     key: "変形に対する結合の維持機構",
     latexQ: "\\[ \\text{金属結晶の展性・延性} \\quad \\mathrm{Cu} \\text{ や } \\mathrm{Au} \\]",
     latexA: "\\[ \\text{自由電子の移動により結合が維持される} \\]",
@@ -482,7 +482,7 @@ const masterData = [
   // =====================================================================
   {
     id: "CHEM_T_16",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "適用できる気体の前提条件",
     latexQ: "\\[ \\text{ボイル・シャルルの法則} \\quad \\frac{PV}{T} = \\text{一定} \\]",
     latexA: "\\[ \\text{物質量 } n \\text{ が一定の気体} \\]",
@@ -493,7 +493,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_17",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "状態方程式からの導出",
     latexQ: "\\[ \\text{気体の分子量 } M \\text{ の測定} \\quad \\text{質量 } w \\text{, 温度 } T \\text{, 圧力 } P \\text{, 体積 } V \\]",
     latexA: "\\[ M = \\frac{wRT}{PV} \\]",
@@ -503,7 +503,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_18",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "分子間力と分子自身の体積の影響を無視できる条件",
     latexQ: "\\[ \\text{実在気体の理想気体近似} \\quad \\text{ずれが小さくなる環境条件} \\]",
     latexA: "\\[ \\text{高温・低圧} \\]",
@@ -513,7 +513,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_19",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "超高圧下で Z > 1 となる主な要因",
     latexQ: "\\[ \\text{圧縮率因子 } Z = \\frac{PV}{nRT} \\quad \\text{理想気体では常に } Z=1 \\]",
     latexA: "\\[ \\text{気体分子自身の体積の影響} \\]",
@@ -523,7 +523,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_20",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "モル分率と分圧の関係",
     latexQ: "\\[ \\text{ドルトンの分圧の法則} \\quad \\text{全圧 } P_{\\text{total}} \\text{ と成分気体A} \\]",
     latexA: "\\[ P_{\\mathrm{A}} = P_{\\text{total}} \\times \\frac{n_{\\mathrm{A}}}{n_{\\text{total}}} \\]",
@@ -533,7 +533,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_21",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "外圧（大気圧）と飽和蒸気圧の関係",
     latexQ: "\\[ \\text{液体の沸騰条件} \\quad \\text{温度上昇に伴う内部からの気泡発生} \\]",
     latexA: "\\[ \\text{飽和蒸気圧 } = \\text{ 外圧} \\]",
@@ -543,7 +543,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_22",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "適用できる気体の性質と例外",
     latexQ: "\\[ \\text{ヘンリーの法則} \\quad \\text{圧力に比例して溶ける気体の法則} \\]",
     latexA: "\\[ \\text{水に溶解しにくい気体 } ( \\mathrm{O_2, N_2, H_2} \\text{ など)} \\]",
@@ -553,7 +553,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_23",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "質量モル濃度 m とモル沸点上昇 K_b の関係",
     latexQ: "\\[ \\text{希薄溶液の沸点上昇度 } \\Delta t_b \\quad \\text{不揮発性非電解質溶液} \\]",
     latexA: "\\[ \\Delta t_b = K_b \\times m \\]",
@@ -563,7 +563,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_24",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "電離を考慮した全粒子数の濃度評価",
     latexQ: "\\[ \\text{凝固点降下度 } \\Delta t_f \\quad 0.1\\,\\mathrm{mol/kg} \\text{ の } \\mathrm{NaCl} \\text{ 水溶液} \\]",
     latexA: "\\[ \\Delta t_f = K_f \\times (0.1 \\times 2) = 0.2\\,K_f \\]",
@@ -573,7 +573,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_25",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "気体の状態方程式と同形の法則",
     latexQ: "\\[ \\text{浸透圧 } \\Pi \\text{ (ファントホッフの法則)} \\quad \\text{モル濃度 } C \\text{, 絶対温度 } T \\]",
     latexA: "\\[ \\Pi = CRT \\]",
@@ -583,7 +583,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_26",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "液体のまま凝固点を下回る状態と温度上昇の理由",
     latexQ: "\\[ \\text{純溶媒の冷却曲線} \\quad \\text{過冷却状態からの急激な温度上昇} \\]",
     latexA: "\\[ \\text{凝固熱の発生} \\]",
@@ -593,7 +593,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_27",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "凝固中の残りの溶液の濃度変化",
     latexQ: "\\[ \\text{溶液の冷却曲線} \\quad \\text{凝固が始まっても温度が一定にならない理由} \\]",
     latexA: "\\[ \\text{純溶媒が析出し、残る溶液の濃度が上昇し続けるため} \\]",
@@ -603,7 +603,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_28",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "光の散乱と、熱運動する溶媒分子の衝突",
     latexQ: "\\[ \\text{コロイド溶液の性質} \\quad \\text{光の通路が輝く現象と、粒子の不規則運動} \\]",
     latexA: "\\[ \\text{チンダル現象 と ブラウン運動} \\]",
@@ -613,7 +613,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_29",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "多量の電解質を加えることで水和水を奪う現象",
     latexQ: "\\[ \\text{親水コロイドの沈殿} \\quad \\text{デンプンやタンパク質の水溶液} \\]",
     latexA: "\\[ \\text{塩析 } \\quad \\text{(多量の電解質が必要)} \\]",
@@ -623,7 +623,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_30",
-    level: "理論化学_状態と溶液",
+    field: "理論化学_状態と溶液",
     key: "少量の電解質を加えることで電荷を中和する現象",
     latexQ: "\\[ \\text{疎水コロイドの沈殿} \\quad \\text{水酸化鉄(III) } \\mathrm{Fe(OH)_3} \\text{ などの溶液} \\]",
     latexA: "\\[ \\text{凝析 } \\quad \\text{(少量の電解質で起こる)} \\]",
@@ -637,7 +637,7 @@ const masterData = [
   // =====================================================================
   {
     id: "CHEM_T_31",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "反応物の濃度依存性（実験的に決定される式）",
     latexQ: "\\[ \\text{反応速度式 } v \\quad \\mathrm{A + B \\longrightarrow C} \\]",
     latexA: "\\[ v = k[\\mathrm{A}]^x[\\mathrm{B}]^y \\]",
@@ -648,7 +648,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_32",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "逆反応の活性化エネルギー E_a' との関係",
     latexQ: "\\[ \\text{エネルギー経路図} \\quad \\text{正反応の活性化エネルギー } E_a \\text{ と反応熱 } Q \\]",
     latexA: "\\[ E_a' = E_a - Q \\]",
@@ -658,7 +658,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_33",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "反応経路の変更によるエネルギー的な変化",
     latexQ: "\\[ \\text{触媒を添加した際の反応速度上昇} \\quad \\text{化学平衡は移動しない} \\]",
     latexA: "\\[ \\text{活性化エネルギーの小さい別の反応経路を作る} \\]",
@@ -668,7 +668,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_34",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "一定温度における濃度の関係式（質量作用の法則）",
     latexQ: "\\[ \\text{平衡定数 } K \\quad \\mathrm{aA + bB \\rightleftharpoons cC + dD} \\]",
     latexA: "\\[ K = \\frac{[\\mathrm{C}]^c[\\mathrm{D}]^d}{[\\mathrm{A}]^a[\\mathrm{B}]^b} \\]",
@@ -678,7 +678,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_35",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "各成分気体の分圧を用いた定義式",
     latexQ: "\\[ \\text{圧平衡定数 } K_p \\quad \\mathrm{N_2 + 3H_2 \\rightleftharpoons 2NH_3} \\]",
     latexA: "\\[ K_p = \\frac{(P_{\\mathrm{NH_3}})^2}{P_{\\mathrm{N_2}} \\cdot (P_{\\mathrm{H_2}})^3} \\]",
@@ -688,7 +688,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_36",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "生成物を取り除く条件変化",
     latexQ: "\\[ \\text{平衡移動} \\quad \\mathrm{N_2 + 3H_2 \\rightleftharpoons 2NH_3} \\quad \\text{系外へ } \\mathrm{NH_3} \\text{ を除去} \\]",
     latexA: "\\[ \\text{右へ移動 } \\quad \\text{(} \\mathrm{NH_3} \\text{ を生成する方向)} \\]",
@@ -698,7 +698,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_37",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "全圧を高くする（加圧する）条件変化",
     latexQ: "\\[ \\text{平衡移動} \\quad \\mathrm{N_2 + 3H_2 \\rightleftharpoons 2NH_3} \\quad \\text{体積を縮小して加圧} \\]",
     latexA: "\\[ \\text{右へ移動 } \\quad \\text{(気体分子数が減少する方向)} \\]",
@@ -708,7 +708,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_38",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "系内の温度を上げる（加熱する）条件変化",
     latexQ: "\\[ \\text{平衡移動} \\quad \\mathrm{N_2 + 3H_2 \\rightleftharpoons 2NH_3 + 92\\,\\mathrm{kJ}} \\quad \\text{加熱} \\]",
     latexA: "\\[ \\text{左へ移動 } \\quad \\text{(吸熱反応の方向)} \\]",
@@ -718,7 +718,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_39",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "全圧を一定に保ちながらアルゴン Ar を加える",
     latexQ: "\\[ \\text{平衡移動} \\quad \\mathrm{N_2 + 3H_2 \\rightleftharpoons 2NH_3} \\quad \\text{全圧一定で不活性気体添加} \\]",
     latexA: "\\[ \\text{左へ移動 } \\quad \\text{(体積増加により各分圧が減少するため)} \\]",
@@ -728,7 +728,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_40",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "体積を一定に保ちながらアルゴン Ar を加える",
     latexQ: "\\[ \\text{平衡移動} \\quad \\mathrm{N_2 + 3H_2 \\rightleftharpoons 2NH_3} \\quad \\text{体積一定で不活性気体添加} \\]",
     latexA: "\\[ \\text{移動しない } \\quad \\text{(各成分気体の分圧・濃度は不変)} \\]",
@@ -738,7 +738,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_41",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "少量の強酸 H^+ を加えた際の応答反応",
     latexQ: "\\[ \\text{緩衝作用} \\quad \\mathrm{CH_3COOH} \\text{ と } \\mathrm{CH_3COONa} \\text{ の混合水溶液} \\]",
     latexA: "\\[ \\mathrm{CH_3COO^- + H^+ \\longrightarrow CH_3COOH} \\]",
@@ -748,7 +748,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_42",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "少量の強塩基 OH^- を加えた際の応答反応",
     latexQ: "\\[ \\text{緩衝作用} \\quad \\mathrm{CH_3COOH} \\text{ と } \\mathrm{CH_3COONa} \\text{ の混合水溶液} \\]",
     latexA: "\\[ \\mathrm{CH_3COOH + OH^- \\longrightarrow CH_3COO^- + H_2O} \\]",
@@ -758,7 +758,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_43",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "オストワルトの希釈律による電離度近似",
     latexQ: "\\[ \\text{弱酸の電離度 } \\alpha \\quad \\text{濃度 } C \\text{, 電離定数 } K_a \\quad (\\alpha \\ll 1) \\]",
     latexA: "\\[ \\alpha = \\sqrt{\\frac{K_a}{C}} \\]",
@@ -768,7 +768,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_44",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "電離度を用いない直接計算式",
     latexQ: "\\[ \\text{弱酸の } [\\mathrm{H^+}] \\quad \\text{モル濃度 } C \\text{, 電離定数 } K_a \\quad (\\alpha \\ll 1) \\]",
     latexA: "\\[ [\\mathrm{H^+}] = \\sqrt{C \\cdot K_a} \\]",
@@ -778,7 +778,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_45",
-    level: "理論化学_速度と平衡",
+    field: "理論化学_速度と平衡",
     key: "イオン積 Q と 溶解度積 K_{sp} の比較",
     latexQ: "\\[ \\text{難溶性塩 } \\mathrm{AgCl} \\text{ の沈殿生成条件} \\quad \\text{溶解度積 } K_{sp} \\]",
     latexA: "\\[ Q > K_{sp} \\quad \\text{(イオン積が溶解度積を超えると沈殿)} \\]",
@@ -792,7 +792,7 @@ const masterData = [
   // =====================================================================
   {
     id: "CHEM_T_46",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "pH変色域と呈色変化（酸性色 → 塩基性色）",
     latexQ: "\\[ \\text{酸塩基指示薬} \\quad \\text{メチルオレンジ (MO)} \\]",
     latexA: "\\[ \\text{pH } 3.1 \\sim 4.4 \\quad \\text{(赤 } \\longrightarrow \\text{ 黄)} \\]",
@@ -802,7 +802,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_47",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "pH変色域と呈色変化（酸性色 → 塩基性色）",
     latexQ: "\\[ \\text{酸塩基指示薬} \\quad \\text{フェノールフタレイン (PP)} \\]",
     latexA: "\\[ \\text{pH } 8.0 \\sim 9.8 \\quad \\text{(無色 } \\longrightarrow \\text{ 赤)} \\]",
@@ -812,7 +812,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_48",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "中和点（当量点）の液性と適した指示薬",
     latexQ: "\\[ \\text{指示薬選択} \\quad \\mathrm{HCl} \\text{ (強酸) } + \\mathrm{NH_3} \\text{ (弱塩基)} \\]",
     latexA: "\\[ \\text{中和点は酸性 } \\implies \\text{ メチルオレンジを使用} \\]",
@@ -822,7 +822,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_49",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "中和点（当量点）の液性と適した指示薬",
     latexQ: "\\[ \\text{指示薬選択} \\quad \\mathrm{CH_3COOH} \\text{ (弱酸) } + \\mathrm{NaOH} \\text{ (強塩基)} \\]",
     latexA: "\\[ \\text{中和点は塩基性 } \\implies \\text{ フェノールフタレインを使用} \\]",
@@ -832,7 +832,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_50",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "加水分解するイオンとその結果生じる液性",
     latexQ: "\\[ \\text{塩の水溶液の液性} \\quad \\text{塩化アンモニウム } \\mathrm{NH_4Cl} \\]",
     latexA: "\\[ \\text{酸性 } \\quad ( \\mathrm{NH_4^+ + H_2O \\rightleftharpoons NH_3 + H_3O^+} ) \\]",
@@ -842,7 +842,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_51",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "加水分解するイオンとその結果生じる液性",
     latexQ: "\\[ \\text{塩の水溶液の液性} \\quad \\text{炭酸ナトリウム } \\mathrm{Na_2CO_3} \\]",
     latexA: "\\[ \\text{塩基性 } \\quad ( \\mathrm{CO_3^{2-} + H_2O \\rightleftharpoons HCO_3^- + OH^-} ) \\]",
@@ -852,7 +852,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_52",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "電離と加水分解の優劣関係による液性",
     latexQ: "\\[ \\text{酸性塩の液性判定} \\quad \\text{炭酸水素ナトリウム } \\mathrm{NaHCO_3} \\]",
     latexA: "\\[ \\text{弱塩基性 } \\quad \\text{(加水分解の傾向が電離より強いため)} \\]",
@@ -862,7 +862,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_53",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "硫酸の強酸性による電離",
     latexQ: "\\[ \\text{酸性塩の液性判定} \\quad \\text{硫酸水素ナトリウム } \\mathrm{NaHSO_4} \\]",
     latexA: "\\[ \\text{酸性 } \\quad ( \\mathrm{HSO_4^- \\longrightarrow H^+ + SO_4^{2-}} ) \\]",
@@ -872,7 +872,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_54",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "酸性水溶液中での還元半反応式と色の変化",
     latexQ: "\\[ \\text{強力な酸化剤} \\quad \\mathrm{MnO_4^-} \\text{ (過マンガン酸イオン・赤紫色)} \\]",
     latexA: "\\[ \\mathrm{MnO_4^- + 8H^+ + 5e^- \\longrightarrow Mn^{2+} + 4H_2O} \\quad \\text{(無色)} \\]",
@@ -882,7 +882,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_55",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "中性または塩基性水溶液中での還元生成物と色",
     latexQ: "\\[ \\text{酸化剤の条件分岐} \\quad \\mathrm{MnO_4^-} \\text{ (中性・塩基性条件)} \\]",
     latexA: "\\[ \\mathrm{MnO_4^- + 2H_2O + 3e^- \\longrightarrow MnO_2 + 4OH^-} \\quad \\text{(黒褐色沈殿)} \\]",
@@ -892,7 +892,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_56",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "酸性水溶液中での還元半反応式と色の変化",
     latexQ: "\\[ \\text{強力な酸化剤} \\quad \\mathrm{Cr_2O_7^{2-}} \\text{ (二クロム酸イオン・赤橙色)} \\]",
     latexA: "\\[ \\mathrm{Cr_2O_7^{2-} + 14H^+ + 6e^- \\longrightarrow 2Cr^{3+} + 7H_2O} \\quad \\text{(暗緑色)} \\]",
@@ -902,7 +902,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_57",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "ヨウ素滴定で用いられる酸化半反応式",
     latexQ: "\\[ \\text{代表的な還元剤} \\quad \\mathrm{S_2O_3^{2-}} \\text{ (チオ硫酸イオン)} \\]",
     latexA: "\\[ \\mathrm{2S_2O_3^{2-} \\longrightarrow S_4O_6^{2-} + 2e^-} \\quad \\text{(テトラチオン酸イオン)} \\]",
@@ -912,7 +912,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_58",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "硫化水素 H_2S と反応した際の還元半反応式",
     latexQ: "\\[ \\text{二面性物質} \\quad \\mathrm{SO_2} \\text{ (酸化剤としての働き)} \\]",
     latexA: "\\[ \\mathrm{SO_2 + 4H^+ + 4e^- \\longrightarrow S + 2H_2O} \\]",
@@ -922,7 +922,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_59",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "通常の酸化剤と反応した際の酸化半反応式",
     latexQ: "\\[ \\text{二面性物質} \\quad \\mathrm{SO_2} \\text{ (還元剤としての働き)} \\]",
     latexA: "\\[ \\mathrm{SO_2 + 2H_2O \\longrightarrow SO_4^{2-} + 4H^+ + 2e^-} \\]",
@@ -932,7 +932,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_60",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "強力な酸化剤と反応した際の酸化半反応式",
     latexQ: "\\[ \\text{二面性物質} \\quad \\mathrm{H_2O_2} \\text{ (還元剤としての働き)} \\]",
     latexA: "\\[ \\mathrm{H_2O_2 \\longrightarrow O_2 + 2H^+ + 2e^-} \\]",
@@ -942,7 +942,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_61",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "希硫酸中での放電時の酸化半反応式",
     latexQ: "\\[ \\text{実用電池の極板反応} \\quad \\text{鉛蓄電池の負極 } ( \\mathrm{Pb} ) \\]",
     latexA: "\\[ \\mathrm{Pb + SO_4^{2-} \\longrightarrow PbSO_4 + 2e^-} \\]",
@@ -952,7 +952,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_62",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "希硫酸中での放電時の還元半反応式",
     latexQ: "\\[ \\text{実用電池の極板反応} \\quad \\text{鉛蓄電池の正極 } ( \\mathrm{PbO_2} ) \\]",
     latexA: "\\[ \\mathrm{PbO_2 + 4H^+ + SO_4^{2-} + 2e^- \\longrightarrow PbSO_4 + 2H_2O} \\]",
@@ -962,7 +962,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_63",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "供給された水素ガス H_2 の酸化半反応式",
     latexQ: "\\[ \\text{燃料電池 (リン酸型等)} \\quad \\text{電解質が酸性の負極反応} \\]",
     latexA: "\\[ \\mathrm{H_2 \\longrightarrow 2H^+ + 2e^-} \\]",
@@ -972,7 +972,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_64",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "供給された酸素ガス O_2 の還元半反応式",
     latexQ: "\\[ \\text{燃料電池 (リン酸型等)} \\quad \\text{電解質が酸性の正極反応} \\]",
     latexA: "\\[ \\mathrm{O_2 + 4H^+ + 4e^- \\longrightarrow 2H_2O} \\]",
@@ -982,7 +982,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_65",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "陽極 (アノード) で優先的に起こる酸化反応",
     latexQ: "\\[ \\text{電気分解} \\quad \\mathrm{NaOH} \\text{ や } \\mathrm{H_2SO_4} \\text{ 水溶液 / } \\mathrm{Pt} \\text{ 電極} \\]",
     latexA: "\\[ \\mathrm{2H_2O \\longrightarrow O_2 + 4H^+ + 4e^-} \\]",
@@ -992,7 +992,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_66",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "陰極 (カソード) で優先的に起こる還元反応",
     latexQ: "\\[ \\text{電気分解} \\quad \\mathrm{CuSO_4} \\text{ や } \\mathrm{AgNO_3} \\text{ 水溶液 / } \\mathrm{Pt} \\text{ 電極} \\]",
     latexA: "\\[ \\mathrm{Cu^{2+} + 2e^- \\longrightarrow Cu} \\quad \\text{(金属析出)} \\]",
@@ -1002,7 +1002,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_67",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "陰極 (カソード) で優先的に起こる還元反応",
     latexQ: "\\[ \\text{電気分解} \\quad \\mathrm{NaCl} \\text{ や } \\mathrm{K_2SO_4} \\text{ 水溶液 / } \\mathrm{Pt} \\text{ 電極} \\]",
     latexA: "\\[ \\mathrm{2H_2O + 2e^- \\longrightarrow H_2 + 2OH^-} \\]",
@@ -1012,7 +1012,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_68",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "陽極室に供給される物質と、陽イオン交換膜を通過するイオン",
     latexQ: "\\[ \\text{工業的製法} \\quad \\text{水酸化ナトリウムのイオン交換膜法} \\]",
     latexA: "\\[ \\text{陽極室に飽和 } \\mathrm{NaCl} \\text{ 水溶液 / } \\mathrm{Na^+} \\text{ が陰極室へ移動} \\]",
@@ -1022,7 +1022,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_69",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "粗銅板 (不純物含む) と 純銅板 の接続極性",
     latexQ: "\\[ \\text{金属の精製} \\quad \\text{銅の電解精錬 (電解液: } \\mathrm{CuSO_4} \\text{)} \\]",
     latexA: "\\[ \\text{陽極に 粗銅板 / 陰極に 純銅板} \\]",
@@ -1032,7 +1032,7 @@ const masterData = [
   },
   {
     id: "CHEM_T_70",
-    level: "理論化学_酸塩基と還元",
+    field: "理論化学_酸塩基と還元",
     key: "陽極泥に含まれる主な金属物質の条件",
     latexQ: "\\[ \\text{銅の電解精錬} \\quad \\text{陽極の下に沈殿する陽極泥} \\]",
     latexA: "\\[ \\text{銅よりイオン化傾向の小さい金属 } ( \\mathrm{Au, Ag} \\text{ など)} \\]",
@@ -1041,6 +1041,8 @@ const masterData = [
     "【解説】：粗銅に含まれる \\[ \\mathrm{Zn, Fe, Ni} \\] などはイオン化して溶液中に残るが、金や銀は溶出できずに単体のまま極板下部へ崩れ落ちる。"
   }
 ];
+
+
 
 
 let topSel = null, midSel = null, botSel = null;
