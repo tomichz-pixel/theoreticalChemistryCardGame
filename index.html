@@ -51,7 +51,6 @@ window.MathJax = {
     border-bottom: 2px solid #ddd;
 }
 
-/* スマホでもタップしやすいプルダウンのスタイリング */
 #math-game .field-select-container {
     display: flex;
     align-items: center;
@@ -97,7 +96,6 @@ window.MathJax = {
     text-align: center;
 }
 
-/* 縦方向への配置を優先させるグリッド設定 */
 #math-game .area {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -212,7 +210,6 @@ window.MathJax = {
     pointer-events: none;
 }
 
-/* モーダル */
 #math-game .modal {
     display: none;
     position: absolute;
@@ -268,19 +265,14 @@ window.MathJax = {
 </style>
 
 <div class="header">
-    <div>理論化学パズル<span id="field-disp" class="field-badge"></span></div>
+    <div>化学カードゲーム<span id="field-disp" class="field-badge"></span></div>
     <div>ミス: <span id="m">0</span> 回</div>
 </div>
 
 <div class="controls">
     <div class="field-select-container">
         <span style="font-size:13px; color:#555; font-weight:bold; white-space:nowrap;">分野:</span>
-        <select id="field-select">
-            <option value="物質の構成と結合">物質の構成と結合</option>
-            <option value="物質の状態と溶液">物質の状態と溶液</option>
-            <option value="反応速度と化学平衡">反応速度と化学平衡</option>
-            <option value="酸・塩基と酸化還元">酸・塩基と酸化還元</option>
-        </select>
+        <select id="field-select"></select>
     </div>
     <div style="display: flex; gap: 20px; align-items: center; justify-content: center; width:100%; margin-top:4px;">
         <label><input type="radio" name="pairCount" value="3"> 3組</label>
@@ -318,6 +310,8 @@ window.MathJax = {
 </div>
 
 <script>
+
+
 (function(){
 
 // 分野(field)によるダイレクト抽出に対応させたマスターデータ
@@ -1042,14 +1036,11 @@ const const masterData  = [
   }
 ];
 
-
-
-
 let topSel = null, midSel = null, botSel = null;
 let lock = false, modalOpen = false;
 let miss = 0, match = 0;
 let requestedPairCount = 6;
-let currentPairCount = 6; // 実際の出題組数を保持
+let currentPairCount = 6;
 
 const topArea = document.querySelector('#top');
 const midArea = document.querySelector('#mid');
@@ -1068,12 +1059,25 @@ const reselectBtn = document.querySelector('#reselect-btn');
 
 function shuffle(a){ return a.sort(() => Math.random() - 0.5); }
 
-// 個別レンダリングによるパフォーマンス改善
 function renderMath(targets = null) {
     if(window.MathJax) {
         if (targets) MathJax.typesetPromise(targets).catch((err) => console.log(err.message));
         else MathJax.typesetPromise().catch((err) => console.log(err.message));
     }
+}
+
+// 改良点：masterDataから一意の分野名を抽出してプルダウンを作成
+function initFieldSelect() {
+    // 全データからfieldのみを抽出し、Setを使って重複を除去
+    const fields = [...new Set(masterData.map(d => d.field))];
+    
+    fieldSelect.innerHTML = ''; // クリア
+    fields.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f;
+        opt.textContent = f;
+        fieldSelect.appendChild(opt);
+    });
 }
 
 function pickRandom(arr, n) {
@@ -1162,8 +1166,6 @@ function checkMatch() {
                 show('正解！', modalBody, () => {
                     topSel.c.classList.add('matched'); midSel.c.classList.add('matched'); botSel.c.classList.add('matched');
                     match++; resetSelection(); 
-                    
-                    // 最後の1組クリア時は、カード消滅を少し待ってから終了画面へ
                     if(match === currentPairCount) {
                         setTimeout(() => { end(); }, 300);
                     }
@@ -1181,16 +1183,13 @@ function checkMatch() {
 
 function resetSelection() { topSel = null; midSel = null; botSel = null; lock = false; }
 
-// 背景スクロールをロックして快適な操作性を確保
 function show(title, body, cb) {
     modalOpen = true;
     mt.textContent = title;
     txt.innerHTML = body;
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-
     renderMath([txt]);
-
     btn.onclick = () => { 
         modal.style.display = 'none'; 
         modalOpen = false; 
@@ -1211,17 +1210,15 @@ function setupGame() {
     clearModal.style.display = 'none';
     document.body.style.overflow = '';
 
-    // ヘッダーの分野バッジを更新
     const selectedField = fieldSelect.value;
+    if (!selectedField) return; // データがない場合の安全策
+
     fieldDisp.textContent = selectedField;
 
     const radios = document.getElementsByName('pairCount');
     for (let r of radios) if (r.checked) requestedPairCount = parseInt(r.value);
 
-    // 選ばれた分野のデータを厳密に抽出
     let fieldFullData = masterData.filter(d => d.field === selectedField);
-    
-    // 案Bの実装：データ数不足時は強制的に出題組数を減らす
     currentPairCount = Math.min(requestedPairCount, fieldFullData.length);
 
     if (currentPairCount < requestedPairCount) {
@@ -1232,12 +1229,9 @@ function setupGame() {
 
     let gameData = pickRandom(fieldFullData, currentPairCount);
 
-    // 縦並びの千鳥配置を綺麗に保つための行数動的計算（3列固定）
     let gridRows = Math.ceil(currentPairCount / 3);
     let rowStyle = `repeat(${gridRows}, 1fr)`;
-    topArea.style.gridTemplateRows = rowStyle;
-    midArea.style.gridTemplateRows = rowStyle;
-    bottomArea.style.gridTemplateRows = rowStyle;
+    [topArea, midArea, bottomArea].forEach(a => a.style.gridTemplateRows = rowStyle);
 
     topArea.innerHTML = ''; midArea.innerHTML = ''; bottomArea.innerHTML = '';
     shuffle([...gameData]).forEach(d => topArea.appendChild(createCard(d, 'Q')));
@@ -1247,23 +1241,23 @@ function setupGame() {
     renderMath([topArea, midArea, bottomArea]);
 }
 
-// イベントリスナー
+// 初期化実行
+initFieldSelect(); // 選択肢を生成
+setupGame();      // ゲーム開始
+
 fieldSelect.addEventListener('change', () => { setupGame(); });
 resetBtn.onclick = () => { setupGame(); };
 retryBtn.onclick = () => { setupGame(); };
-
 reselectBtn.onclick = () => {
     clearModal.style.display = 'none';
     document.body.style.overflow = '';
-    fieldSelect.focus(); // プルダウンへフォーカスを移す
+    fieldSelect.focus();
 };
-
 const radios = document.getElementsByName('pairCount');
 for (let r of radios) r.onchange = () => setupGame();
-
-// 初期読み込み時のセットアップ
-setupGame();
 
 })();
 </script>
 </div>
+
+  
