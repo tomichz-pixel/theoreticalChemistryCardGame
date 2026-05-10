@@ -1,1 +1,648 @@
-<p>hello
+<div id="math-game" style="width:100%; max-width:900px; margin:auto; font-family:sans-serif; position: relative;">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+* { box-sizing: border-box; user-select: none; }
+body { margin: 0; padding: 0; font-family: sans-serif; background: #fafafa; }
+
+#math-game {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    position: relative;
+}
+
+#math-game .header {
+    height: 48px;
+    background: #263238; /* フラスコをイメージした落ち着いたダークカラー */
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#math-game .controls {
+    background: #f4f4f4;
+    padding: 12px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid #ddd;
+}
+
+#math-game .slider-container {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+#math-game .board {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+#math-game .area-wrapper {
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+#math-game .area-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+#math-game .area {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+#math-game #top { padding-top: 10px; padding-bottom: 10px; }
+
+#math-game .card {
+    width: 100%;
+    cursor: pointer;
+    perspective: 600px;
+    position: relative;
+    z-index: 1;
+}
+
+#math-game .card:hover,
+#math-game .card.flipped,
+#math-game .card.selected {
+    z-index: 100 !important;
+}
+
+#math-game .card-inner-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 60%; 
+}
+
+#math-game .inner {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+#math-game .card.flipped .inner { transform: rotateY(180deg); }
+
+#math-game .front,
+#math-game .back {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 8px;
+}
+
+/* 中間層・解答層のカラーリング調整 */
+#math-game #mid .front { background: #E0F7FA; color: #006064; }
+#math-game #bottom .front { background: #FCE4EC; color: #880E4F; }
+
+#math-game .back {
+    background: white;
+    transform: rotateY(180deg);
+    border: 2px solid #ddd;
+    transform-style: preserve-3d; 
+}
+#math-game #mid .back { border-color: #E0F7FA; color: #006064; }
+#math-game #bottom .back { border-color: #FCE4EC; color: #880E4F; }
+
+#math-game .q-card-content {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border: 2px solid #BBDEFB;
+    color: #0D47A1;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+}
+
+#math-game .card.selected .q-card-content {
+    border: 3px solid #FF9800;
+    background: #FFF3E0;
+    box-shadow: 0 0 0 3px rgba(255,152,0,0.35);
+    z-index: 10;
+}
+
+#math-game .math-text {
+    font-size: clamp(11px, 2.5vw, 14px);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+#math-game .matched {
+    opacity: 0;
+    transform: scale(0);
+    transition: 0.3s;
+    pointer-events: none;
+}
+
+/* モーダル */
+#math-game .modal {
+    display: none;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center; 
+    z-index: 200;
+}
+
+#math-game .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 95%;
+    max-width: 720px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#math-game #txt {
+    overflow-y: auto;
+    padding: 5px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.6;
+    user-select: text; /* 解説はコピーできるように許可 */
+}
+
+#math-game .btn-primary {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#math-game .formula-box {
+    font-size: 1.1em;
+    margin: 10px 0;
+    padding: 12px;
+    border: 2px solid #2196F3;
+    border-radius: 8px;
+    text-align: center;
+    overflow-x: auto;
+    background: white;
+}
+
+/* 下部一覧表エリアのスタイル */
+#table-wrapper {
+    margin-top: 20px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+#unit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    user-select: text; /* 一覧表のテキスト選択を許可 */
+}
+
+#unit-table th, #unit-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+#unit-table th { background-color: #f5f5f5; color: #333; text-align: center;}
+#unit-table tr:nth-child(even) { background-color: #fafafa; }
+</style>
+</head>
+<body>
+
+<div id="math-game">
+    <div class="header">
+        <div>理論化学パズル Q-Key-A</div>
+        <div>ミス: <span id="m">0</span> 回</div>
+    </div>
+
+    <div class="controls">
+        <div class="slider-container">
+            <div style="font-size:13px; color:#555; font-weight:bold;">単元選択: <span id="unit-disp" style="color:#2196F3; font-size:15px;">物質の構成と結合・結晶格子</span></div>
+            <input type="range" id="unit-slider" min="1" max="4" value="1" style="width:100%; cursor:pointer;">
+        </div>
+        <div style="display: flex; gap: 20px; align-items: center; margin-top: 4px;">
+            <label><input type="radio" name="pairCount" value="3"> 3組</label>
+            <label><input type="radio" name="pairCount" value="6" checked> 6組</label>
+            <button id="reset-btn" class="btn-primary" style="background:#FF9800; padding: 4px 12px; font-size:12px;">シャッフル配札</button>
+        </div>
+    </div>
+
+    <div class="board">
+        <div class="area-wrapper"><div class="area-title">【出発物質・現象】(Q)</div><div class="area" id="top"></div></div>
+        <div class="area-wrapper"><div class="area-title">【条件・反応の場】(Key)</div><div class="area" id="mid"></div></div>
+        <div class="area-wrapper"><div class="area-title">【生成物・法則】(A)</div><div class="area" id="bottom"></div></div>
+    </div>
+
+    <div class="modal" id="clear-modal">
+        <div class="modal-content" style="text-align:center; align-items: center;">
+            <h3 style="color:#4CAF50; margin-top:0;">パズル完成！</h3>
+            <p id="clear-msg" style="font-size: 16px; margin: 10px 0;"></p>
+            <div style="display:flex; gap:15px; margin-top:15px;">
+                <button id="retry-btn" class="btn-primary" style="background:#FF9800;">同じ単元でもう一度</button>
+                <button id="next-btn" class="btn-primary">次の単元へ進む</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px;">
+                <h3 id="mt" style="margin: 0;"></h3>
+                <button id="btn" class="btn-primary" style="background:#FF9800; border-radius:20px;">次へ ＞</button>
+            </div>
+            <div id="txt"></div>
+        </div>
+    </div>
+
+    <div id="table-wrapper">
+        <div class="area-title" style="font-size:14px;">現在選択中の単元データ一覧（復習用）</div>
+        <table id="unit-table">
+            <thead>
+                <tr>
+                    <th style="width:30%;">物質・現象 (Q)</th>
+                    <th style="width:30%;">条件・場 (Key)</th>
+                    <th style="width:40%;">生成物・法則 (A) & 解説</th>
+                </tr>
+            </thead>
+            <tbody id="unit-table-body"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+(function(){
+
+// =====================================================================
+// 理論化学マスターデータ（代表例抜粋）
+// 実際のファイルには、作成した全70問のデータを配置してください。
+// =====================================================================
+const masterData = [
+  // --- 単元1: 物質の構成と結合・結晶格子 ---
+  {
+    id: "CHEM_T_01", level: "理論化学_構成と結合", key: "配位数と充填率",
+    latexQ: "\\[ \\text{体心立方格子 (BCC)} \\]", latexA: "\\[ \\text{配位数 } 8 \\text{ / 充填率 } 68\\% \\]",
+    note: "【着眼点】：単位格子の中心と頂点の配置\n【解説】：1つの原子の最近接原子は8個。原子が占める体積の割合（充填率）は \\[ 68\\% \\] である。"
+  },
+  {
+    id: "CHEM_T_02", level: "理論化学_構成と結合", key: "配位数と充填率",
+    latexQ: "\\[ \\text{面心立方格子 (FCC)} \\]", latexA: "\\[ \\text{配位数 } 12 \\text{ / 充填率 } 74\\% \\]",
+    note: "【着眼点】：各面の中央と頂点の配置（最密構造）\n【解説】：最近接原子は同一平面上に6個、上下に3個ずつの計12個。充填率は限界値の \\[ 74\\% \\] となる。"
+  },
+  {
+    id: "CHEM_T_05", level: "理論化学_構成と結合", key: "原子半径 r と格子定数 a の関係",
+    latexQ: "\\[ \\text{面心立方格子 (FCC)} \\quad \\text{単位格子の一辺 } a \\]", latexA: "\\[ r = \\frac{\\sqrt{2}}{4}a \\]",
+    note: "【公式/方針】：単位格子の「面の対角線」で原子同士が接触する\n【導出】：面の対角線の長さ \\[ \\sqrt{2}a \\] が原子半径の4倍 ( \\[ 4r \\] ) に等しいため、 \\[ 4r = \\sqrt{2}a \\] となる。"
+  },
+  {
+    id: "CHEM_T_14", level: "理論化学_構成と結合", key: "分子間に働く特異的に強い結合",
+    latexQ: "\\[ \\text{同族内で異常な高沸点} \\quad \\mathrm{H_2O, HF, NH_3} \\]", latexA: "\\[ \\text{水素結合} \\quad \\text{(} \\mathrm{F, O, N} \\text{ と } \\mathrm{H} \\text{ の結合)} \\]",
+    note: "【着眼点】：電気陰性度の差が非常に大きい分子\n【解説】：強い分極により生じる静電気的な引力。分子間力としては極めて強いため、沸点が著しく高くなる。"
+  },
+
+  // --- 単元2: 物質の状態と溶液 ---
+  {
+    id: "CHEM_T_18", level: "理論化学_状態と溶液", key: "分子間力と分子自身の体積の影響を無視できる条件",
+    latexQ: "\\[ \\text{実在気体の理想気体近似} \\quad \\text{ずれが小さくなる環境条件} \\]", latexA: "\\[ \\text{高温・低圧} \\]",
+    note: "【着眼点】：熱運動を激しくし、分子間の距離を広げる\n【解説】：高温にすることで分子間力の影響を振り切り、低圧にすることで排除体積効果を極小化できる。"
+  },
+  {
+    id: "CHEM_T_21", level: "理論化学_状態と溶液", key: "外圧（大気圧）と飽和蒸気圧の関係",
+    latexQ: "\\[ \\text{液体の沸騰条件} \\quad \\text{内部からの気泡発生} \\]", latexA: "\\[ \\text{飽和蒸気圧 } = \\text{ 外圧} \\]",
+    note: "【着眼点】：液体内部からも気化が起こる限界\n【解説】：飽和蒸気圧が外圧と等しくなると気泡がつぶされなくなり沸騰する。"
+  },
+  {
+    id: "CHEM_T_29", level: "理論化学_状態と溶液", key: "多量の電解質を加えることで水和水を奪う現象",
+    latexQ: "\\[ \\text{親水コロイドの沈殿} \\quad \\text{デンプンやタンパク質の水溶液} \\]", latexA: "\\[ \\text{塩析 } \\quad \\text{(多量の電解質が必要)} \\]",
+    note: "【着眼点】：表面に多数の水分子を引き付けている\n【解説】：多量の電解質を加えるとイオンの水和が優先され、コロイドを取り囲む水和水が剥がされて沈殿する。"
+  },
+
+  // --- 単元3: 反応速度と化学平衡 ---
+  {
+    id: "CHEM_T_33", level: "理論化学_速度と平衡", key: "反応経路の変更によるエネルギー的な変化",
+    latexQ: "\\[ \\text{触媒を添加した際の反応速度上昇} \\quad \\text{化学平衡は移動しない} \\]", latexA: "\\[ \\text{活性化エネルギーの小さい別の反応経路を作る} \\]",
+    note: "【着眼点】：山頂の高さを下げる\n【解説】：正反応・逆反応ともに活性化エネルギーが同量だけ小さくなるため双方向の速度が上昇する。反応熱は不変。"
+  },
+  {
+    id: "CHEM_T_37", level: "理論化学_速度と平衡", key: "全圧を高くする（加圧する）条件変化",
+    latexQ: "\\[ \\text{平衡移動} \\quad \\mathrm{N_2 + 3H_2 \\rightleftharpoons 2NH_3} \\quad \\text{加圧} \\]", latexA: "\\[ \\text{右へ移動 } \\quad \\text{(気体分子数が減少する方向)} \\]",
+    note: "【公式/方針】：ル・シャトリエの原理\n【解説】：左辺の分子数合計4に対し、右辺は2であるため、粒子数を減らして圧力上昇を緩和する右方向へ移動する。"
+  },
+  {
+    id: "CHEM_T_41", level: "理論化学_速度と平衡", key: "少量の強酸 H^+ を加えた際の応答反応",
+    latexQ: "\\[ \\text{緩衝作用} \\quad \\mathrm{CH_3COOH} \\text{ と } \\mathrm{CH_3COONa} \\text{ の混合液} \\]", latexA: "\\[ \\mathrm{CH_3COO^- + H^+ \\longrightarrow CH_3COOH} \\]",
+    note: "【公式/方針】：弱酸の陰イオンが \\[ \\mathrm{H^+} \\] を捕捉する\n【解説】：加えた強酸の \\[ \\mathrm{H^+} \\] が弱酸の分子に変わるためpHの急変が防がれる。"
+  },
+
+  // --- 単元4: 酸・塩基と酸化還元 ---
+  {
+    id: "CHEM_T_47", level: "理論化学_酸塩基と還元", key: "pH変色域と呈色変化（酸性色 → 塩基性色）",
+    latexQ: "\\[ \\text{酸塩基指示薬} \\quad \\text{フェノールフタレイン (PP)} \\]", latexA: "\\[ \\text{pH } 8.0 \\sim 9.8 \\quad \\text{(無色 } \\longrightarrow \\text{ 赤)} \\]",
+    note: "【着眼点】：強塩基の滴定に適した塩基性側の変色域\n【暗記法】：中性・酸性では無色であり、塩基性になると鮮やかな赤（桃）色に呈色する。"
+  },
+  {
+    id: "CHEM_T_54", level: "理論化学_酸塩基と還元", key: "酸性水溶液中での還元半反応式と色の変化",
+    latexQ: "\\[ \\text{強力な酸化剤} \\quad \\mathrm{MnO_4^-} \\text{ (赤紫色)} \\]", latexA: "\\[ \\mathrm{MnO_4^- + 8H^+ + 5e^- \\longrightarrow Mn^{2+} + 4H_2O} \\quad \\text{(無色)} \\]",
+    note: "【公式/方針】：酸性条件でマンガンの酸化数が \\[ +7 \\to +2 \\] へ変化\n【滴定】：自身の赤紫色が消えて無色が持続する点を終点とするため指示薬は不要。"
+  },
+  {
+    id: "CHEM_T_61", level: "理論化学_酸塩基と還元", key: "希硫酸中での放電時の酸化半反応式",
+    latexQ: "\\[ \\text{実用電池の極板反応} \\quad \\text{鉛蓄電池の負極 } ( \\mathrm{Pb} ) \\]", latexA: "\\[ \\mathrm{Pb + SO_4^{2-} \\longrightarrow PbSO_4 + 2e^-} \\]",
+    note: "【着眼点】：水に不溶な塩の形成\n【解説】：酸化されて生じたイオンが電解液中の硫酸イオンと結合し、極板表面に白色の \\[ \\mathrm{PbSO_4} \\] が付着する。"
+  }
+];
+
+let topSel = null, midSel = null, botSel = null;
+let lock = false, modalOpen = false;
+let miss = 0, match = 0;
+let currentPairCount = 6;
+let currentUnitIndex = 1;
+
+const topArea = document.querySelector('#top');
+const midArea = document.querySelector('#mid');
+const bottomArea = document.querySelector('#bottom');
+const modal = document.querySelector('#modal');
+const clearModal = document.querySelector('#clear-modal');
+const mt = document.querySelector('#mt');
+const txt = document.querySelector('#txt');
+const btn = document.querySelector('#btn');
+const resetBtn = document.querySelector('#reset-btn');
+const retryBtn = document.querySelector('#retry-btn');
+const nextBtn = document.querySelector('#next-btn');
+const unitSlider = document.querySelector('#unit-slider');
+const unitDisp = document.querySelector('#unit-disp');
+const tableBody = document.querySelector('#unit-table-body');
+
+// 単元インデックスと文字列のマッピング対応表
+const unitMap = [
+    { label: "物質の構成と結合・結晶格子", levelStr: "理論化学_構成と結合" },
+    { label: "物質の状態と溶液", levelStr: "理論化学_状態と溶液" },
+    { label: "反応速度と化学平衡", levelStr: "理論化学_速度と平衡" },
+    { label: "酸・塩基と酸化還元", levelStr: "理論化学_酸塩基と還元" }
+];
+
+function shuffle(a){ return a.sort(() => Math.random() - 0.5); }
+
+function renderMath(targets = null) {
+    if(window.MathJax) {
+        if (targets) MathJax.typesetPromise(targets).catch((err) => console.log(err.message));
+        else MathJax.typesetPromise().catch((err) => console.log(err.message));
+    }
+}
+
+function pickRandom(arr, n) {
+    let shuffled = shuffle([...arr]);
+    return shuffled.slice(0, Math.min(n, arr.length));
+}
+
+function createCard(d, areaType){
+    let c = document.createElement('div');
+    c.className = 'card';
+    let wrapper = document.createElement('div'); wrapper.className = 'card-inner-wrapper';
+    let i = document.createElement('div'); i.className = 'inner';
+
+    if (areaType === 'Q') {
+        let qContent = document.createElement('div');
+        qContent.className = 'q-card-content math-text';
+        let qStr = d.latexQ.replace(/\\\[|\\\]/g, '').trim();
+
+        if (qStr.includes('\\quad')) {
+            let parts = qStr.split('\\quad');
+            qContent.innerHTML = `\\( \\displaystyle ${parts[0]} \\) <br> <span style="font-size:0.8em; opacity:0.8;">\\( ${parts[1]} \\)</span>`;
+        } else {
+            qContent.innerHTML = `\\( \\displaystyle ${qStr} \\)`;
+        }
+
+        i.appendChild(qContent); wrapper.appendChild(i); c.appendChild(wrapper);
+
+        c.onclick = () => {
+            if(lock || modalOpen || c.classList.contains('matched')) return;
+            if (topSel && topSel.c === c) { c.classList.remove('selected'); topSel = null; return; }
+            c.classList.add('selected');
+            if(topSel) topSel.c.classList.remove('selected');
+            topSel = {c, d};
+            checkMatch();
+        };
+        return c;
+    }
+
+    let f = document.createElement('div'); f.className = 'front';
+    let fText = areaType === 'Key' ? '条件・場 (Key)' : '生成物・法則 (A)';
+    f.innerHTML = `${fText}<br><span style="font-size:10px; font-weight:normal;">(Tap)</span>`;
+
+    let b = document.createElement('div'); b.className = 'back'; 
+    let cleanA = d.latexA.replace(/\\\[|\\\]/g, '').trim();
+    let contentHtml = areaType === 'Key' ? `<span style="font-size:0.9em; font-weight:bold;">${d.key}</span>` : `\\( \\displaystyle ${cleanA} \\)`;
+  
+    b.innerHTML = `<div class="math-text">${contentHtml}</div>`;
+    i.appendChild(f); i.appendChild(b); wrapper.appendChild(i); c.appendChild(wrapper);
+
+    c.onclick = () => {
+        if(lock || modalOpen || c.classList.contains('matched')) return;
+        if (areaType === 'Key') {
+            if (midSel && midSel.c === c) { c.classList.remove('flipped'); midSel = null; return; }
+            c.classList.add('flipped'); if(midSel) midSel.c.classList.remove('flipped'); midSel = {c, d};
+        } else {
+            if (botSel && botSel.c === c) { c.classList.remove('flipped'); botSel = null; return; }
+            c.classList.add('flipped'); if(botSel) botSel.c.classList.remove('flipped'); botSel = {c, d};
+        }
+        checkMatch();
+    };
+    return c;
+}
+
+function checkMatch() {
+    if(topSel && midSel && botSel) {
+        lock = true;
+        setTimeout(() => {
+            let isMatch = (topSel.d.id === midSel.d.id) && (midSel.d.id === botSel.d.id);
+            let dTarget = topSel.d;
+            
+            let cleanQ_modal = dTarget.latexQ.replace(/\\\[|\\\]/g, '').trim();
+            let cleanA_modal = dTarget.latexA.replace(/\\\[|\\\]/g, '').trim();
+            
+            let modalBody = `
+                <div class="formula-box">
+                    \\( \\displaystyle ${cleanQ_modal} \\implies ${cleanA_modal} \\)
+                </div>
+                <div style="font-size:0.95em; background:#f4f4f4; padding:15px; border-radius:6px; line-height:1.7;">
+                    <strong style="color:#0D47A1;">【条件・場】 ${dTarget.key}</strong>
+                    <hr style="margin:8px 0; border:none; border-top:1px dashed #ccc;">
+                    ${dTarget.note.replace(/\n/g, '<br>')}
+                </div>
+            `;
+
+            if(isMatch) {
+                show('正解！', modalBody, () => {
+                    topSel.c.classList.add('matched'); midSel.c.classList.add('matched'); botSel.c.classList.add('matched');
+                    match++; resetSelection(); if(match === currentPairCount) end();
+                });
+            } else {
+                miss++; document.getElementById('m').textContent = miss;
+                show('ちがうよ', modalBody, () => {
+                    topSel.c.classList.remove('selected'); midSel.c.classList.remove('flipped'); botSel.c.classList.remove('flipped');
+                    resetSelection();
+                });
+            }
+        }, 600);
+    }
+}
+
+function resetSelection() { topSel = null; midSel = null; botSel = null; lock = false; }
+
+function show(title, body, cb) {
+    modalOpen = true;
+    mt.textContent = title;
+    txt.innerHTML = body;
+    modal.style.display = 'flex';
+    renderMath();
+    btn.onclick = () => { modal.style.display = 'none'; modalOpen = false; cb(); };
+}
+
+function end() {
+    document.getElementById('clear-msg').innerHTML = `ミスカウント <b>${miss}</b> 回で解き切りました！<br>下の一覧表で間違えた箇所を復習しましょう。`;
+    clearModal.style.display = 'flex';
+    // 次の単元があるかどうかの制御
+    if (currentUnitIndex >= 4) nextBtn.style.display = 'none';
+    else nextBtn.style.display = 'inline-block';
+}
+
+// 下部の一覧表を生成する連動ロジック
+function renderUnitTable(unitData) {
+    tableBody.innerHTML = '';
+    unitData.forEach(d => {
+        let tr = document.createElement('tr');
+        let cleanQ = d.latexQ.replace(/\\\[|\\\]/g, '').trim();
+        let cleanA = d.latexA.replace(/\\\[|\\\]/g, '').trim();
+        
+        tr.innerHTML = `
+            <td>\\( \\displaystyle ${cleanQ} \\)</td>
+            <td style="font-weight:bold; color:#006064;">${d.key}</td>
+            <td>
+                <div style="margin-bottom:4px;">\\( \\displaystyle ${cleanA} \\)</div>
+                <div style="font-size:11px; color:#666; border-top:1px dashed #ddd; padding-top:4px;">${d.note.replace(/\n/g, '<br>')}</div>
+            </td>
+        `;
+        tableBody.appendChild(tr);
+    });
+}
+
+function setupGame() {
+    resetSelection(); match = 0; miss = 0;
+    document.getElementById('m').textContent = 0;
+    clearModal.style.display = 'none';
+
+    const radios = document.getElementsByName('pairCount');
+    for (let r of radios) if (r.checked) currentPairCount = parseInt(r.value);
+
+    // 1. スライドバーの値に対応する単元情報を取得
+    let currentMapInfo = unitMap[currentUnitIndex - 1];
+    unitDisp.textContent = currentMapInfo.label;
+
+    // 2. 該当するレベルのデータのみを完全に抽出 (ブレなし)
+    let unitFullData = masterData.filter(d => d.level === currentMapInfo.levelStr);
+    
+    // データが足りない場合のフォールバック安全処理
+    if(unitFullData.length === 0) unitFullData = masterData; 
+    let actualCount = Math.min(currentPairCount, unitFullData.length);
+    currentPairCount = actualCount; // 実際の出題数へ補正
+
+    // 3. ランダム抽出して盤面へ配置
+    let gameData = pickRandom(unitFullData, actualCount);
+    
+    topArea.innerHTML = ''; midArea.innerHTML = ''; bottomArea.innerHTML = '';
+    shuffle([...gameData]).forEach(d => topArea.appendChild(createCard(d, 'Q')));
+    shuffle([...gameData]).forEach(d => midArea.appendChild(createCard(d, 'Key')));
+    shuffle([...gameData]).forEach(d => bottomArea.appendChild(createCard(d, 'A')));
+
+    // 4. 下部の一覧表を該当単元の全データで連動出力
+    renderUnitTable(unitFullData);
+    
+    renderMath();
+}
+
+// イベントリスナー設定
+unitSlider.addEventListener('input', (e) => {
+    currentUnitIndex = parseInt(e.target.value);
+    setupGame();
+});
+
+resetBtn.onclick = () => { setupGame(); };
+retryBtn.onclick = () => { setupGame(); };
+nextBtn.onclick = () => {
+    if (currentUnitIndex < 4) {
+        currentUnitIndex++;
+        unitSlider.value = currentUnitIndex;
+        setupGame();
+    }
+};
+
+const radios = document.getElementsByName('pairCount');
+for (let r of radios) r.onchange = () => setupGame();
+
+// 初期化
+setupGame();
+
+})();
+</script>
+</div>
