@@ -310,12 +310,10 @@ window.MathJax = {
 </div>
 
 <script>
-
-
 (function(){
 
-// 分野(field)によるダイレクト抽出に対応させたマスターデータ
-const const masterData  = [
+// masterData内の「field」の値をプルダウンへ自動反映します
+const masterData  = [
   // =====================================================================
   // 1. 物質の構成と結合・結晶格子（15問）
   // =====================================================================
@@ -1036,6 +1034,9 @@ const const masterData  = [
   }
 ];
 
+
+
+  
 let topSel = null, midSel = null, botSel = null;
 let lock = false, modalOpen = false;
 let miss = 0, match = 0;
@@ -1259,5 +1260,3 @@ for (let r of radios) r.onchange = () => setupGame();
 })();
 </script>
 </div>
-
-  
