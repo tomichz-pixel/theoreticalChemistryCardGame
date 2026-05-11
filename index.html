@@ -218,8 +218,9 @@ window.MathJax = {
     height: 100%;
     background: rgba(0,0,0,0.6);
     justify-content: center;
-    align-items: center; 
+    align-items: flex-start; /* 中央揃えを解除し、上端（flex-start）に合わせる */
     z-index: 200;
+    overflow-y: auto; /* 長い解説でもスクロールできるように追加 */
 }
 
 #math-game .modal-content {
@@ -1190,6 +1191,14 @@ function show(title, body, cb) {
     txt.innerHTML = body;
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+
+    // --- ここから追加 ---
+    const modalContent = modal.querySelector('.modal-content');
+    // 「問題エリア(#top)」の親要素からの相対的な上端位置 + エリアの高さの半分
+    const targetY = topArea.offsetTop + (topArea.offsetHeight / 2);
+    modalContent.style.marginTop = targetY + 'px';
+    // ------------------
+  
     renderMath([txt]);
     btn.onclick = () => { 
         modal.style.display = 'none'; 
