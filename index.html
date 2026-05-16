@@ -145,8 +145,9 @@ window.MathJax = {
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* ▼ ここを safe center にしておけば文字切れも防げます ▼ */
+    justify-content: safe center;
+    align-items: safe center;
     text-align: center;
     padding: 4px;
     backface-visibility: hidden;
@@ -154,18 +155,25 @@ window.MathJax = {
     border-radius: 8px;
 }
 
+#math-game .front {
+    transform: rotateY(0deg) translateZ(1px);
+    -webkit-transform: rotateY(0deg) translateZ(1px);
+}  
+  
 #math-game #mid .front { background: #E0F7FA; color: #006064; }
 #math-game #bottom .front { background: #FCE4EC; color: #880E4F; }
 
 #math-game .back {
     background: white;
-    transform: rotateY(180deg);
+    transform: rotateY(180deg) translateZ(1px);
+    -webkit-transform: rotateY(180deg) translateZ(1px);
     border: 2px solid #ddd;
-    transform-style: preserve-3d; 
+    /* 注意：ここにあった transform-style: preserve-3d; は悪影響が出るため削除します */
 }
+  
 #math-game #mid .back { border-color: #E0F7FA; color: #006064; }
 #math-game #bottom .back { border-color: #FCE4EC; color: #880E4F; }
-
+  
 #math-game .q-card-content {
     position: absolute;
     top: 0; left: 0;
@@ -178,8 +186,9 @@ window.MathJax = {
     box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     transition: all 0.2s ease;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* ▼ ここを center から safe center に変更 ▼ */
+    justify-content: safe center;
+    align-items: safe center;
     padding: 2px;
 }
 
@@ -196,8 +205,9 @@ window.MathJax = {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    /* ▼ ここを center から safe center に変更 ▼ */
+    justify-content: safe center;
+    align-items: safe center;
     padding: 4px;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
@@ -1062,9 +1072,13 @@ const reselectBtn = document.querySelector('#reselect-btn');
 function shuffle(a){ return a.sort(() => Math.random() - 0.5); }
 
 function renderMath(targets = null) {
-    if(window.MathJax) {
+    // 修正：MathJax本体がロードされ、関数が利用可能かまでチェックする
+    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
         if (targets) MathJax.typesetPromise(targets).catch((err) => console.log(err.message));
         else MathJax.typesetPromise().catch((err) => console.log(err.message));
+    } else {
+        // まだ読み込まれていない場合はログだけ出してクラッシュを防ぐ
+        console.warn("MathJaxがまだ読み込まれていません。初回は自動レンダリングを待ちます。");
     }
 }
 
@@ -1191,8 +1205,7 @@ function show(title, body, cb) {
     txt.innerHTML = body;
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-
-    // --- ここから追加 ---
+// --- ここから追加 ---
     const modalContent = modal.querySelector('.modal-content');
     // 「問題エリア(#top)」の親要素からの相対的な上端位置 + エリアの高さの半分
     const targetY = topArea.offsetTop + (topArea.offsetHeight / 2);
@@ -1251,10 +1264,13 @@ function setupGame() {
     renderMath([topArea, midArea, bottomArea]);
 }
 
-// 初期化実行
-initFieldSelect(); // 選択肢を生成
-setupGame();      // ゲーム開始
+// -------------------------------------------------------------
+// 初期化・イベント登録実行（並べ替え）
+// -------------------------------------------------------------
 
+initFieldSelect(); // 選択肢を生成
+
+// 先にすべてのボタンやプルダウンにイベントを登録しておく（安全対策）
 fieldSelect.addEventListener('change', () => { setupGame(); });
 resetBtn.onclick = () => { setupGame(); };
 retryBtn.onclick = () => { setupGame(); };
@@ -1263,8 +1279,12 @@ reselectBtn.onclick = () => {
     document.body.style.overflow = '';
     fieldSelect.focus();
 };
+
 const radios = document.getElementsByName('pairCount');
 for (let r of radios) r.onchange = () => setupGame();
+
+// 最後にゲームを開始する
+setupGame();
 
 })();
 </script>
